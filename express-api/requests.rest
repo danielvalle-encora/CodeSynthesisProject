@@ -1,0 +1,12 @@
+POST http://localhost:3001/login
+Content-Type: application/json
+    
+{
+    "email": "admin",
+    "password": "password"
+}
+
+###
+
+GET http://localhost:3001/test
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiaWF0IjoxNzI1NjAwMTA0LCJleHAiOjE3MjU2MDAxMTl9.YR8YttO3uY4M4mfnVih-aFAcuVnW1NLwj1xnIMeMWuc

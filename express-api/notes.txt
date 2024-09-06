@@ -1,0 +1,9 @@
+-- UPON LOGIN --
+client sends request to server with credentials
+server validates and responds with token
+
+-- DURING TRANSACTIONS -- 
+client sends POST request to server with token
+server validates token, then responds with data
+
+router -> logging middle: log user request -> auth middleware -> log authenticated request -> endpoint handler (res.send())
