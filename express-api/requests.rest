@@ -10,3 +10,57 @@ Content-Type: application/json
 
 GET http://localhost:3001/test
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiaWF0IjoxNzI1NjAwMTA0LCJleHAiOjE3MjU2MDAxMTl9.YR8YttO3uY4M4mfnVih-aFAcuVnW1NLwj1xnIMeMWuc
+
+###
+
+POST http://localhost:3000/api/signup
+Content-Type: application/json
+
+{
+    "email": "test2@gmail.com",
+    "password": "Qrwe!423"
+}
+
+
+###
+GET http://localhost:3000/api/task/getAll
+
+
+###
+POST http://localhost:3000/api/task
+Content-Type: application/json
+
+{
+    "title": "Task 3",
+    "description": "sdfasdfa",
+    "dueDate": "2024-10-30",
+    "status": "asdf"
+}
+
+###
+PUT http://localhost:3000/api/task
+Content-Type: application/json
+
+{
+    "id": "1a1e1e7b-f84a-452f-8893-1cbbbec6477d",
+    "title": "awa",
+    "description": "aw",
+    "dueDate": "2024-10-01",
+    "status": "pending"
+}
+
+###
+GET http://localhost:3000/api/task
+Content-Type: application/json
+
+{
+    "id": "1a1e1e7b-f84a-452f-8893-1cbbbec6477d"
+}
+
+###
+DELETE http://localhost:3000/api/task
+Content-Type: application/json
+
+{
+    "id": "9521e0aa-a154-481a-a1f6-8512a193d11a"
+}
