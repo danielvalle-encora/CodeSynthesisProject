@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import createDatabaseAndCollection from '../database/task';
 import { uuid } from 'uuidv4';
+import authToken from '../middleware/authToken';
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ interface Task {
 }
 
 // GET all tasks
-router.get('/getAll', async (req, res) => {
+router.use(authToken).get('/getAll', async (req, res) => {
     const db = await createDatabaseAndCollection();
 
     if(!db) return;

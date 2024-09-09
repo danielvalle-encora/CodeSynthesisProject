@@ -2,14 +2,14 @@ POST http://localhost:3001/login
 Content-Type: application/json
     
 {
-    "email": "admin",
-    "password": "password"
+    "email": "test1@gmail.com",
+    "password": "Qrwe!423"
 }
 
 ###
 
 GET http://localhost:3001/test
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiaWF0IjoxNzI1NjAwMTA0LCJleHAiOjE3MjU2MDAxMTl9.YR8YttO3uY4M4mfnVih-aFAcuVnW1NLwj1xnIMeMWuc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiaWF0IjoxNzI1ODc4NTc3LCJleHAiOjE3MjU4Nzg1OTJ9.Z6QLI8mOFCFNdNV5GNTBpiGJKLeG5S473b1i-AcO3L8
 
 ###
 
@@ -17,13 +17,19 @@ POST http://localhost:3000/api/signup
 Content-Type: application/json
 
 {
-    "email": "test2@gmail.com",
+    "email": "test1@gmail.com",
     "password": "Qrwe!423"
 }
 
 
 ###
 GET http://localhost:3000/api/task/getAll
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiaWF0IjoxNzI1ODc5MDMxfQ.HWjtX2SZJyY1zkJ5_EIRJSxJbulgy5RH1hmgQs-HNlY
+
+
+###
+GET http://localhost:3000/api/test2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiaWF0IjoxNzI1ODc5MDMxfQ.HWjtX2SZJyY1zkJ5_EIRJSxJbulgy5RH1hmgQs-HNlY
 
 
 ###

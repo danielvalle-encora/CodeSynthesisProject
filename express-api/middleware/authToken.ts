@@ -11,10 +11,8 @@ function authToken(req, res, next) {
 
     const tokens = authHeader.split(' ');
     const token = tokens[1];
-    
+
     try {
-        console.log(token)
-        console.log(accessTokenSecret)
         jwt.verify(token, accessTokenSecret, (err, user) => {
             if (err) res.status(403).send('Invalid token');
             req.user = user;

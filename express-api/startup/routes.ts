@@ -7,36 +7,13 @@ import useTask from '../router/task';
 const router = Router();
 
 router.use("/signup", useSignup);
-router.use("/task", useTask);
+// router.use("/task", useTask);
 
-// useProtectedRoutes(router)
-// useProtectedRoutes1(router) // /user
-
-//router.use("/signup", useSignup);
-
-// router.get("/protected-route", (req,res,next) => {
-//     console.log({ request: req.route})
-//     next()
-//     })
-//     .use(authToken)
-//     .use((req, res) => {
-//     res.send("this is protected data")
-    
-// });
-
-// router.post("/signup", (req,res) => {})
-// router.post("/login", (req,res) => {})
-
-// protected dapat
-// router.post("/auth/token", (req,res) => {
-
-// })
-
-// function useProtectedRoutes(router:Router) {
-//     router.use(authToken).use("/", /* GET THIS FROM OTHER METHOD OR FILE */)
-// }
-
-// // better in afile
+useProtectedRoutes(router);
+function useProtectedRoutes(router) {
+    router.use("/task", useTask);
+    // add more routes here
+}
 
 
 export default router;
