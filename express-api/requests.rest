@@ -24,7 +24,7 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3000/api/task/getAll
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiaWF0IjoxNzI1ODc5MDMxfQ.HWjtX2SZJyY1zkJ5_EIRJSxJbulgy5RH1hmgQs-HNlY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTcyNTg5MDgxMH0.QFFENh_RDstAIC1o2dmF_IkKxjzhaFwMGALICIhwJ64
 
 
 ###
@@ -34,13 +34,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluI
 
 ###
 POST http://localhost:3000/api/task
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3QxQGdtYWlsLmNvbSIsImlhdCI6MTcyNTg5MDgxMH0.QFFENh_RDstAIC1o2dmF_IkKxjzhaFwMGALICIhwJ64
 Content-Type: application/json
 
 {
-    "title": "Task 3",
-    "description": "sdfasdfa",
+    "title": "Task 1",
+    "description": "Description 1",
     "dueDate": "2024-10-30",
-    "status": "asdf"
+    "status": "pending"
 }
 
 ###

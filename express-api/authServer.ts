@@ -39,8 +39,6 @@ app.post('/login', async (req, res) => {
         }
     }
 
-
-    
 });
 
 // Logout route
@@ -49,7 +47,7 @@ app.delete('/logout', (req, res) => {
     res.json({ message: 'Logged out successfully' });
 });
 
-app.get('/test', authToken, (req, res) => {
+app.get('/test', (req, res) => {
     res.json("test");
 });
 
