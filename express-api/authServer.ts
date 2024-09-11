@@ -29,7 +29,7 @@ app.post('/login', async (req, res) => {
             // Check if password is correct
             if (await bcrypt.compare(password, user!.password)) {
                 // Generate a JWT token
-                const token = jwt.sign({ email: email }, accessTokenSecret);
+                const token = jwt.sign({ email: email }, accessTokenSecret, { expiresIn: '1h' });
                 res.json({ token });
             } else {
                 res.status(401).json({ message: 'Incorrect email or password.' });
