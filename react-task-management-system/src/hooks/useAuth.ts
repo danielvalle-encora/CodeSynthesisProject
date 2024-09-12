@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import axios from 'axios';
 import { useState } from 'react';
 
-export default function useLogin() {
+export default function useAuth() {
 
     const {email, token} = useAppSelector(state => state.currentUser)
     const dispatch = useAppDispatch()    
@@ -26,11 +26,15 @@ export default function useLogin() {
             dispatch(setCurrentUser({ email: email, token: response.data.token })) 
         })
         .catch(function(err){
-            console.log("def");
             setMessage(err.response.data.message)   
             setStatus(false)
         })
     }
 
-    return {status, message, email, token, login}
+    const logout = () => {
+        
+        dispatch(setCurrentUser({ email: "", token: "" }))
+    }
+
+    return {message, email, token, login, logout}
 }

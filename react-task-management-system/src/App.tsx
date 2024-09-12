@@ -14,10 +14,21 @@ function App() {
   return (
     <>
       <Provider store={store}>
+        <Logout />
         <Router />
       </Provider>
     </>
   )
+}
+
+function Logout() {
+  const dispatch = useAppDispatch()
+
+  const logout = () => {
+    dispatch(clearCurrentUser())
+  }
+
+  return <Button onClick={logout}>Logout</Button>
 }
 
 function Router() {
