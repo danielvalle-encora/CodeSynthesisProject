@@ -1,5 +1,5 @@
 import Login from "./Login";
 
-export default function LoginIndex() {
+export default function Index() {
     return <Login />
 }

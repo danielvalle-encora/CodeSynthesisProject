@@ -20,12 +20,12 @@ export default defineConfig({
         ws: true,
         rewrite: (path) => path.replace(/^\/auth/, '')
       },
-      '/task': {
-        target: 'http://localhost:3001/api',
+      '/api/task': {
+        target: 'http://localhost:3000/api/task/',
         changeOrigin: true,
         secure: false,
         ws: true,
-        rewrite: (path) => path.replace(/^\/task/, '')
+        rewrite: (path) => path.replace(/^\/api\/task/, '')
       }
     }
   }

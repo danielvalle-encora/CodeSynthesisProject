@@ -11,13 +11,9 @@ export default function useLogin() {
     const [status, setStatus] = useState(false)
     const [message, setMessage] = useState("")
 
-const login = (email:string, password: string) => {
-
+    const login = (email:string, password: string) => {
     
-
-    // do login here
-    axios
-        .post("/auth/login", {
+        axios.post("/auth/login", {
             email,
             password
         }, { 
@@ -25,7 +21,8 @@ const login = (email:string, password: string) => {
             'Content-Type': 'application/json'
             }
         })
-        .then(function(response){       
+        .then(function(response){    
+            console.log(response.data.token)   
             dispatch(setCurrentUser({ email: email, token: response.data.token })) 
         })
         .catch(function(err){

@@ -6,7 +6,7 @@ import { setCurrentUser, clearCurrentUser } from '@/store/currentUser';
 import React, { useEffect } from 'react'
 
 import Login from './common/Login'
-import Layout from "./common/Layout"
+import Home from "./common/Home"
 
 import { Button } from '@/components/ui/button'
 
@@ -14,8 +14,6 @@ function App() {
   return (
     <>
       <Provider store={store}>
-        {/* doesn't work either */}
-        {/* <Button variant="link" onClick={() => setToken("")}>logout</Button> */}
         <Router />
       </Provider>
     </>
@@ -45,11 +43,9 @@ function Router() {
     }
   }, [token]);
 
-  console.log("test")
-
   return <>
     {!token && <Login />}
-    {/* {token && <HomePage />} */}
+    {token && <Home />}
   </>
 
 }

@@ -18,7 +18,7 @@ interface Task {
 }
 
 // GET all tasks
-router.use(authToken).get('/getAll', async (req, res) => {
+router.get('/getAll', async (req, res) => {
     const db = await createDatabaseAndCollection();
 
     if(!db) return;

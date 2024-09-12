@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import useLogin from './hooks/useLogin';
 
-const Login2: React.FC = () => {
+const Login: React.FC = () => {
     const {status, message, email, token, login} = useLogin();
 
     const handleSubmit = (e:any) => {
@@ -14,7 +14,7 @@ const Login2: React.FC = () => {
 
         const email = formData.get('email') as string;
         const password = formData.get('password') as string;
-        console.log(email, password)
+        
         if (email && password) {
             login(email, password);
         }
@@ -61,8 +61,6 @@ const Login2: React.FC = () => {
                 Login
               </Button>
             </form>
-            <small>{email}</small>
-            <small>{token}</small>
             <div className="text-center">
               <span className="text-sm text-stone-600">Don't have an account? </span>
               <Button 
@@ -78,4 +76,4 @@ const Login2: React.FC = () => {
       )
 };
 
-export default Login2;
+export default Login;
