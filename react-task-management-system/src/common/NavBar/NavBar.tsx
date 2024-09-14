@@ -1,19 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAppDispatch } from '@/store/hooks';
+import { clearCurrentUser } from '@/store/currentUser';
 
 import { Button } from '@/components/ui/button';
+import { LogOut } from 'react-feather';
 //import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const NavBar: React.FC = () => {
-    return (
-        <>
-        <nav className="w-64 bg-white shadow-md flex flex-col">
+
+  const dispatch = useAppDispatch()
+
+  const handleLogout = () => {
+    dispatch(clearCurrentUser())
+    window.location.href = '/'
+  }
+
+  return (
+    <>
+      <nav className="w-64 bg-white shadow-md flex flex-col">
         <div className="p-4">
           <h1 className="text-2xl font-bold text-gray-800">Task Manager</h1>
         </div>
         <ul className="space-y-2 p-4 flex-grow">
           <li>
-            <Link to="/">
+            <Link to="/dashboard">
               <Button variant="ghost" className="w-full justify-start">
                 {/* <LayoutDashboard className="mr-2 h-4 w-4" /> */}
                 Dashboard
@@ -54,8 +65,8 @@ const NavBar: React.FC = () => {
                 <AvatarFallback>{user.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
               </Avatar> */}
               <div>
-              <p className="text-sm font-medium">John Doe</p>
-              <p className="text-xs text-gray-500">john.doe@gmail.com</p>
+                <p className="text-sm font-medium">John Doe</p>
+                <p className="text-xs text-gray-500">john.doe@gmail.com</p>
                 {/* <p className="text-sm font-medium">{user.name}</p>
                 <p className="text-xs text-gray-500">{user.email}</p> */}
               </div>
@@ -64,16 +75,16 @@ const NavBar: React.FC = () => {
               variant="ghost"
               size="icon"
               className="h-8 w-8"
-            //   onClick={handleLogout}
+              onClick={handleLogout}
               aria-label="Logout"
             >
-              {/* <LogOut className="h-4 w-4 text-gray-500" /> */}
+              <LogOut className="h-4 w-4 text-gray-500" />
             </Button>
           </div>
         </div>
       </nav>
-        </>
-    )
+    </>
+  )
 }
 
 export default NavBar

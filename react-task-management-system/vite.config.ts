@@ -26,6 +26,13 @@ export default defineConfig({
         secure: false,
         ws: true,
         rewrite: (path) => path.replace(/^\/api\/task/, '')
+      },
+      '/api/signup': {
+        target: 'http://localhost:3000/api/signup/',
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+        rewrite: (path) => path.replace(/^\/api\/signup/, '')
       }
     }
   }

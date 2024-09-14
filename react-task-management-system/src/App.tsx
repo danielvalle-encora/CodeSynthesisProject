@@ -4,8 +4,10 @@ import { useAppSelector, useAppDispatch } from "./store/hooks";
 import { setCurrentUser, clearCurrentUser } from '@/store/currentUser';
 
 import React, { useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
-import Login from './common/Login'
+import Login from './pages/Login'
+import Register from './pages/Register'
 import Home from "./common/Home"
 
 import { Button } from '@/components/ui/button'
@@ -14,8 +16,7 @@ function App() {
   return (
     <>
       <Provider store={store}>
-        <Logout />
-        <Router />
+        <Pages />
       </Provider>
     </>
   )
@@ -31,32 +32,45 @@ function Logout() {
   return <Button onClick={logout}>Logout</Button>
 }
 
-function Router() {
-  const { email, token } = useAppSelector(state => state.currentUser)
+function Pages() {
+  const { id, email, token } = useAppSelector(state => state.currentUser)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
+    const id = sessionStorage.getItem("id");
     const email = sessionStorage.getItem("email");
     const token = sessionStorage.getItem("token");
 
-    if (email && token) {
-      dispatch(setCurrentUser({ email: email, token: token }))
+    if (id && email && token) {
+      dispatch(setCurrentUser({ id: id, email: email, token: token }))
     }
   }, [])
 
   useEffect(() => {
     if (token) {
+      sessionStorage.setItem("id", id);
       sessionStorage.setItem("email", email);
       sessionStorage.setItem("token", token);
     } else {
+      sessionStorage.removeItem("id");
       sessionStorage.removeItem("email");
       sessionStorage.removeItem("token");
     }
   }, [token]);
 
   return <>
-    {!token && <Login />}
     {token && <Home />}
+    {!token
+      &&
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<Register />} />
+        </Routes>
+      </Router>
+    }
+
+
   </>
 
 }
@@ -65,7 +79,7 @@ function HomePage() {
   const { email } = useAppSelector(state => state.currentUser)
   const dispatch = useAppDispatch();
   const signOut = () => {
-      dispatch(clearCurrentUser())
+    dispatch(clearCurrentUser())
   }
 
   return <>
@@ -76,7 +90,7 @@ function HomePage() {
           <div id="nav-spacer" className="grow">a </div>
           <div><Button className="rounded-full" onClick={() => signOut()}>
             {email.charAt(0).toUpperCase()}
-            </Button> 
+          </Button>
           </div>
         </div>
         <div id="content" className="w-full grow bg-yellow-500">

@@ -22,8 +22,8 @@ export default function useAuth() {
             }
         })
         .then(function(response){    
-            console.log(response.data.token)   
-            dispatch(setCurrentUser({ email: email, token: response.data.token })) 
+            console.log(response.data)   
+            dispatch(setCurrentUser({ id: response.data.id, email: email, token: response.data.token })) 
         })
         .catch(function(err){
             setMessage(err.response.data.message)   
@@ -32,7 +32,6 @@ export default function useAuth() {
     }
 
     const logout = () => {
-        
         dispatch(setCurrentUser({ email: "", token: "" }))
     }
 

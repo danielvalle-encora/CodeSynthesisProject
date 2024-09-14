@@ -15,10 +15,11 @@ interface Task {
     description: string;
     dueDate: string;
     status: string;
+    userId: string;
 }
 
 // GET all tasks
-router.get('/getAll', async (req, res) => {
+router.post('/getAll', async (req, res) => {
     const db = await createDatabaseAndCollection();
 
     if(!db) return;
@@ -26,7 +27,8 @@ router.get('/getAll', async (req, res) => {
     const {database} = db;
     if (database)
     {
-        const task = await database.collection("task").find().toArray();
+        const { id } = req.body;
+        const task = await database.collection("task").find({ userId: id }).toArray();
         res.json(task);
     }
 });
@@ -58,7 +60,7 @@ router.post('/', async (req, res) => {
     const {database} = db;
     if (database) // <------- 
     {
-        const { title, description, dueDate, status } = req.body;
+        const { title, description, dueDate, status, userId } = req.body;
 
         const newTask: Task = {
             id: uuid(),
@@ -66,6 +68,7 @@ router.post('/', async (req, res) => {
             description,
             dueDate,
             status,
+            userId
         };
 
         await database.collection("task").insertOne(newTask);
@@ -77,7 +80,7 @@ router.post('/', async (req, res) => {
 // PUT (update) an existing task
 router.put('/', async (req, res) => {
     const { id } = req.body;
-    const { title, description, dueDate, status } = req.body;
+    const { title, description, dueDate, status, userId } = req.body;
 
     const db = await createDatabaseAndCollection();
     if(!db) return;
@@ -94,6 +97,7 @@ router.put('/', async (req, res) => {
                 description,
                 dueDate,
                 status,
+                userId
             };
 
             await database.collection("task").updateOne({ id: id }, { $set: updatedTask });
