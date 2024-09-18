@@ -32,7 +32,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { Calendar as CalendarIcon } from "lucide-react"
+import { Calendar as CalendarIcon, ArrowUpDown } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
@@ -81,7 +81,7 @@ const Task: FC = () => {
         dueDate: new Date(date as Date).toLocaleString(),
         status: formData.get('status') as 'pending' | 'in-progress' | 'completed',
       }
-      
+
       if (modalMode === 'insert') {
         insertTask(currTask);
       }
@@ -93,7 +93,11 @@ const Task: FC = () => {
     }
   }
 
+  const [sortColumn, setSortColumn] = useState('')
+  const [sortDirection, setSortDirection] = useState('asc')
+  const [filterText, setFilterText] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isCalendarDisabled, setIsCalendarDisabled] = useState(false)
   const [date, setDate] = useState<Date>()
@@ -112,7 +116,38 @@ const Task: FC = () => {
   const indexOfFirstTask = indexOfLastTask - tasksPerPage
   const currentTasks = tasks.slice(indexOfFirstTask, indexOfLastTask)
 
-  const totalPages = Math.ceil(tasks.length / tasksPerPage)
+  //const totalPages = Math.ceil(tasks.length / tasksPerPage)
+
+  const sortData = (column) => {
+    if (column === sortColumn) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortColumn(column)
+      setSortDirection('asc')
+    }
+  }
+
+  const filterData = (items) => {
+    return items.filter(item =>
+      Object.values(item).some(value =>
+        value.toString().toLowerCase().includes(filterText.toLowerCase())
+      )
+    )
+  }
+
+  // Apply sorting and filtering
+  const processedData = filterData([...tasks].sort((a, b) => {
+    if (a[sortColumn] < b[sortColumn]) return sortDirection === 'asc' ? -1 : 1
+    if (a[sortColumn] > b[sortColumn]) return sortDirection === 'asc' ? 1 : -1
+    return 0
+  }))
+
+  // Pagination
+  const totalPages = Math.ceil(processedData.length / tasksPerPage)
+  const paginatedData = processedData.slice(
+    (currentPage - 1) * tasksPerPage,
+    currentPage * tasksPerPage
+  )
 
   const validateForm = () => {
     let newErrors: Errors = {}
@@ -162,20 +197,27 @@ const Task: FC = () => {
     <>
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Task Maintenance</h1>
-        <Button onClick={() => openModal('insert')} className="mb-4">Add New Task</Button>
-
+        <div className="flex justify-between items-center">
+          <Input
+            placeholder="Search..."
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+            className="max-w-sm mb-4"
+          />
+          <Button onClick={() => openModal('insert')} className="mb-4">Add New Task</Button>
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Due Date</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead onClick={() => sortData('title')} className="cursor-pointer">Title <ArrowUpDown className="inline ml-2 h-4 w-4" /></TableHead>
+              <TableHead onClick={() => sortData('description')} className="cursor-pointer">Description <ArrowUpDown className="inline ml-2 h-4 w-4" /></TableHead>
+              <TableHead onClick={() => sortData('dueDate')} className="cursor-pointer">Due Date <ArrowUpDown className="inline ml-2 h-4 w-4" /></TableHead>
+              <TableHead onClick={() => sortData('status')} className="cursor-pointer">Status <ArrowUpDown className="inline ml-2 h-4 w-4" /></TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentTasks.map((task) => (
+            {paginatedData.map((task) => (
               <TableRow key={task.id}>
                 <TableCell>{task.title}</TableCell>
                 <TableCell>{task.description}</TableCell>
@@ -183,8 +225,8 @@ const Task: FC = () => {
                 <TableCell>
                   {
                     task.status == 'pending' ? 'Pending' :
-                    task.status == 'in-progress' ? 'In Progress' :
-                    task.status == 'completed' ? 'Completed' : ''
+                      task.status == 'in-progress' ? 'In Progress' :
+                        task.status == 'completed' ? 'Completed' : ''
                   }
                 </TableCell>
                 <TableCell>
@@ -195,7 +237,7 @@ const Task: FC = () => {
             ))}
           </TableBody>
         </Table>
-
+        
         <Pagination className="mt-4">
           <PaginationContent>
             <PaginationItem>
@@ -213,7 +255,7 @@ const Task: FC = () => {
             </PaginationItem>
           </PaginationContent>
         </Pagination>
-
+          
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen} >
           <DialogContent>
             <DialogHeader>
@@ -258,11 +300,11 @@ const Task: FC = () => {
                     <PopoverTrigger asChild>
                       <Button
                         variant={"outline"}
-                        className={errors.dueDate ? 
-                                    cn("w-[460px] justify-start text-left font-normal col-span-3 border-red-500",
-                                    !date && "text-muted-foreground") : 
-                                    cn("w-[460px] justify-start text-left font-normal",
-                                    !date && "text-muted-foreground")}
+                        className={errors.dueDate ?
+                          cn("w-[460px] justify-start text-left font-normal col-span-3 border-red-500",
+                            !date && "text-muted-foreground") :
+                          cn("w-[460px] justify-start text-left font-normal",
+                            !date && "text-muted-foreground")}
                         disabled={isCalendarDisabled}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -290,17 +332,14 @@ const Task: FC = () => {
                     defaultValue={currentTask?.status}
                     disabled={modalMode === 'view'}
                   >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a status" />
-                  </SelectTrigger>  
-                  <SelectContent>
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="in-progress">In Progress</SelectItem>
-                        <SelectItem value="completed">Completed</SelectItem>
-                  </SelectContent>
-                    {/* <option value="pending">Pending</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="completed">Completed</option> */}
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="in-progress">In Progress</SelectItem>
+                      <SelectItem value="completed">Completed</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
               </div>
