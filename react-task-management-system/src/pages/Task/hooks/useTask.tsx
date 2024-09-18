@@ -18,9 +18,19 @@ interface Dashboard {
     completed: number;
 }
 
+interface RecentTask {
+    id: string,
+    title: string;
+    description: string;
+    dueDate: Date;
+    status: 'due-soon' | 'overdue' | 'completed';
+    userId: string;
+}
+
 export default function useTask() {
 
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [recentTasks, setRecentTasks] = useState<RecentTask[]>([]);
     const [dashboard, setDashboard] = useState<Dashboard>({ total: 0, pending: 0, inProgress: 0, completed: 0 });
     const { id } = useAppSelector(state => state.currentUser)
 
@@ -36,7 +46,7 @@ export default function useTask() {
     };
 
     const insertTask = async (Task: any) => {
-        console.log(id)
+
         axios.post("/api/task", {
             title: Task.title,
             description: Task.description,
@@ -96,5 +106,38 @@ export default function useTask() {
             });
     }
 
-    return { tasks, dashboard, fetchTasks, insertTask, updateTask, getDashboardData }
+    const getRecentTasks = async () => {
+
+        axios.post('/api/task/getAll', { id })
+            .then(function (response) {
+                const userTasks = response.data;
+                let recentTasks: RecentTask[] = [];
+
+                for (let i = 0; i < userTasks.length; i++) {
+
+
+                    const taskDueDate = new Date(userTasks[i].dueDate);
+                    const today = new Date();
+                    const timeDiff = taskDueDate.getTime() - today.getTime();
+                    const diffInDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Convert milliseconds to days
+
+                    if (!(userTasks[i].status === 'completed' || userTasks[i].status === 'pending')) {
+                        if (diffInDays < 0 && diffInDays < -3) {
+                            userTasks[i].status = 'overdue';
+                        } else if (diffInDays <= 0 && diffInDays >= -3) {
+                            userTasks[i].status = 'due-soon';
+                        }
+                    }
+                    
+                    recentTasks.push(userTasks[i]);
+                }
+
+                setRecentTasks(recentTasks.slice(0, 5));
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    return { tasks, dashboard, recentTasks, fetchTasks, insertTask, updateTask, getDashboardData, getRecentTasks }
 }

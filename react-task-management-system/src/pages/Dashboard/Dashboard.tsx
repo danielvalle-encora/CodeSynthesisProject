@@ -1,25 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
-  LayoutDashboard,
   CheckSquare,
-  UserCircle,
-  Settings,
   Clock,
   AlertCircle,
   CheckCircle2,
-  LogOut
 } from "lucide-react"
-import { Toaster, toast } from 'react-hot-toast'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import useTask from '@/pages/Task/hooks/useTask';
 
 const Dashboard: React.FC = () => {
 
-  const { dashboard, getDashboardData } = useTask();
+  const { dashboard, getDashboardData, recentTasks, getRecentTasks } = useTask();
 
   useEffect(() => {
     getDashboardData();
+    getRecentTasks();
   }, [])
 
   const notifications = [
@@ -79,12 +74,22 @@ const Dashboard: React.FC = () => {
           </CardHeader>
           <CardContent>
             <ul className="space-y-2">
-              {notifications.map(task => (
+              {recentTasks.map(task => (
                 <li key={task.id} className="flex justify-between items-center">
                   <span>{task.title}</span>
-                  <span className={`px-2 py-1 rounded-full text-sm ${task.status === 'due-soon' ? 'bg-yellow-200 text-yellow-800' : 'bg-red-200 text-red-800'
-                    }`}>
-                    {task.status === 'due-soon' ? 'Due Soon' : 'Overdue'}
+                  <span className=
+                    {
+                      `px-2 py-1 rounded-full text-sm 
+                    ${task.status === 'due-soon' ? 'bg-orange-200 text-orange-800' :
+                        task.status === 'overdue' ? 'bg-red-200 text-red-800' :
+                          task.status === 'completed' ? 'bg-green-200 text-green-800' :
+                            task.status === 'in-progress' ? 'bg-blue-200 text-blue-800' : 'bg-gray-200 text-gray-800'}`
+                    }>
+                    {
+                      task.status === 'due-soon' ? 'Due Soon' :
+                        task.status === 'overdue' ? 'Overdue' :
+                          task.status === 'completed' ? 'Completed' :
+                            task.status === 'in-progress' ? 'In Progress' : 'Pending' }
                   </span>
                 </li>
               ))}
@@ -92,15 +97,6 @@ const Dashboard: React.FC = () => {
           </CardContent>
         </Card>
       </main>
-
-      {/* <main className="flex-1 p-8 overflow-auto">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h2>
-        
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          Task is me
-        </ div>
-      </main> */}
     </>
   )
 }

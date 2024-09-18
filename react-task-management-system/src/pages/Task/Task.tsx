@@ -51,8 +51,14 @@ type Task = {
   id: string
   title: string
   description: string
-  dueDate: Date
+  dueDate: string
   status: 'pending' | 'in-progress' | 'completed'
+}
+
+type Errors = {
+  title?: string
+  description?: string
+  dueDate?: string
 }
 
 const Task: FC = () => {
@@ -72,10 +78,10 @@ const Task: FC = () => {
         id: currentTask?.id || "",
         title: formData.get('title') as string,
         description: formData.get('description') as string,
-        dueDate: date as Date,
+        dueDate: new Date(date as Date).toLocaleString(),
         status: formData.get('status') as 'pending' | 'in-progress' | 'completed',
       }
-
+      
       if (modalMode === 'insert') {
         insertTask(currTask);
       }
@@ -99,7 +105,7 @@ const Task: FC = () => {
     dueDate: '',
     status: ''
   })
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState<Errors>({})
 
   const tasksPerPage = 10
   const indexOfLastTask = currentPage * tasksPerPage
@@ -109,9 +115,8 @@ const Task: FC = () => {
   const totalPages = Math.ceil(tasks.length / tasksPerPage)
 
   const validateForm = () => {
-    let newErrors = {}
+    let newErrors: Errors = {}
 
-    console.log(formData.title)
     // Title validation
     if (!formData.title.trim()) {
       newErrors.title = 'Title is required'
@@ -127,7 +132,6 @@ const Task: FC = () => {
       newErrors.dueDate = 'Due Date is required'
     }
 
-    console.log(newErrors)
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -284,7 +288,6 @@ const Task: FC = () => {
                   <Select
                     name="status"
                     defaultValue={currentTask?.status}
-                    className="col-span-3"
                     disabled={modalMode === 'view'}
                   >
                   <SelectTrigger>

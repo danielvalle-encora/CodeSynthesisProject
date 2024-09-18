@@ -1,15 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAppDispatch } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { clearCurrentUser } from '@/store/currentUser';
 
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'react-feather';
-//import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import {
+  LayoutDashboard,
+  CheckSquare,
+  UserCircle,
+  Settings,
+} from "lucide-react";
+
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const NavBar: React.FC = () => {
 
   const dispatch = useAppDispatch()
+
+  const { email } = useAppSelector(state => state.currentUser)
 
   const handleLogout = () => {
     dispatch(clearCurrentUser())
@@ -26,7 +35,7 @@ const NavBar: React.FC = () => {
           <li>
             <Link to="/dashboard">
               <Button variant="ghost" className="w-full justify-start">
-                {/* <LayoutDashboard className="mr-2 h-4 w-4" /> */}
+                <LayoutDashboard className="mr-2 h-4 w-4" />
                 Dashboard
               </Button>
             </Link>
@@ -34,7 +43,7 @@ const NavBar: React.FC = () => {
           <li>
             <Link to="/task">
               <Button variant="ghost" className="w-full justify-start">
-                {/* <CheckSquare className="mr-2 h-4 w-4" /> */}
+                <CheckSquare className="mr-2 h-4 w-4" />
                 Tasks
               </Button>
             </Link>
@@ -42,7 +51,7 @@ const NavBar: React.FC = () => {
           <li>
             <Link to="/profile">
               <Button variant="ghost" className="w-full justify-start">
-                {/* <UserCircle className="mr-2 h-4 w-4" /> */}
+                <UserCircle className="mr-2 h-4 w-4" />
                 Profile
               </Button>
             </Link>
@@ -50,7 +59,7 @@ const NavBar: React.FC = () => {
           <li>
             <Link to="/settings">
               <Button variant="ghost" className="w-full justify-start">
-                {/* <Settings className="mr-2 h-4 w-4" /> */}
+                <Settings className="mr-2 h-4 w-4" />
                 Settings
               </Button>
             </Link>
@@ -65,10 +74,8 @@ const NavBar: React.FC = () => {
                 <AvatarFallback>{user.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
               </Avatar> */}
               <div>
-                <p className="text-sm font-medium">John Doe</p>
-                <p className="text-xs text-gray-500">john.doe@gmail.com</p>
-                {/* <p className="text-sm font-medium">{user.name}</p>
-                <p className="text-xs text-gray-500">{user.email}</p> */}
+                <p className="text-sm font-medium">Test</p>
+                <p className="text-xs text-gray-500">{email}</p>
               </div>
             </div>
             <Button

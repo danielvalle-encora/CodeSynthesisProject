@@ -22,16 +22,6 @@ function App() {
   )
 }
 
-function Logout() {
-  const dispatch = useAppDispatch()
-
-  const logout = () => {
-    dispatch(clearCurrentUser())
-  }
-
-  return <Button onClick={logout}>Logout</Button>
-}
-
 function Pages() {
   const { id, email, token } = useAppSelector(state => state.currentUser)
   const dispatch = useAppDispatch()
