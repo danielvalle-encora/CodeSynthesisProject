@@ -5,6 +5,14 @@ import { Label } from "@/components/ui/label"
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
+
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
+
 const Login: React.FC = () => {
   const { message, login } = useAuth();
   const navigate = useNavigate();
@@ -21,9 +29,9 @@ const Login: React.FC = () => {
       login(email, password);
     }
   }
-  
+
   const handleSignup = () => {
-      navigate('/signup');
+    navigate('/signup');
   }
 
   return (
@@ -31,7 +39,15 @@ const Login: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-stone-100 to-stone-200">
       <div className="w-full max-w-sm mx-auto space-y-6 bg-white p-8 rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold text-center text-stone-800">Login</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
+
+        {message &&
+          <Alert className='text-center' variant="destructive">
+            <AlertDescription>
+              {message}
+            </AlertDescription>
+          </Alert>
+        }
+        <form onSubmit={handleSubmit} className="text-s text-left space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email" className="sr-only">Email</Label>
             <Input
@@ -54,11 +70,11 @@ const Login: React.FC = () => {
               className="w-full px-3 py-2 bg-stone-50 border-b-2 border-stone-200 focus:border-stone-500 focus:outline-none transition-colors"
             />
           </div>
-          <div className="text-sm text-right">
+          {/* <div className="text-sm text-right">
             <Button variant="link" className="text-stone-600 hover:text-stone-800 transition-colors">
               Forgot password?
             </Button>
-          </div>
+          </div> */}
           <Button type="submit" className="w-full bg-stone-600 hover:bg-stone-700 text-white transition-colors">
             Login
           </Button>

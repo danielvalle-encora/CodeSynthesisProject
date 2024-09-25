@@ -32,7 +32,7 @@ export default function useAuth() {
     }
 
     const logout = () => {
-        dispatch(setCurrentUser({ email: "", token: "" }))
+        dispatch(setCurrentUser({ id: "", email: "", token: "" }))
     }
 
     return {message, email, token, login, logout}

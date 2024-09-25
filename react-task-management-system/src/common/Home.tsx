@@ -36,7 +36,7 @@ const Layout: React.FC = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/task" element={<Task />} />
         </Routes>
-        {/* <Toaster position="bottom-right" /> */}
+        <Toaster position="bottom-right" />
       </div>
     </Router>
   );

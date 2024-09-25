@@ -6,7 +6,7 @@ import useTask from './hooks/useTask';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { format } from "date-fns"
+import { format, set } from "date-fns"
 import { cn } from "@/lib/utils"
 import {
   Table,
@@ -96,6 +96,7 @@ const Task: FC = () => {
   const [sortColumn, setSortColumn] = useState('')
   const [sortDirection, setSortDirection] = useState('asc')
   const [filterText, setFilterText] = useState('')
+  const [filterColumn, setFilterColumn] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -112,13 +113,8 @@ const Task: FC = () => {
   const [errors, setErrors] = useState<Errors>({})
 
   const tasksPerPage = 10
-  const indexOfLastTask = currentPage * tasksPerPage
-  const indexOfFirstTask = indexOfLastTask - tasksPerPage
-  const currentTasks = tasks.slice(indexOfFirstTask, indexOfLastTask)
 
-  //const totalPages = Math.ceil(tasks.length / tasksPerPage)
-
-  const sortData = (column) => {
+  const sortData = (column: string) => {
     if (column === sortColumn) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
     } else {
@@ -127,19 +123,38 @@ const Task: FC = () => {
     }
   }
 
-  const filterData = (items) => {
-    return items.filter(item =>
-      Object.values(item).some(value =>
-        value.toString().toLowerCase().includes(filterText.toLowerCase())
-      )
-    )
+  const filterData = (items: Task[]) => {
+    
+    if (filterColumn === 'title') {
+      return items.filter(item => item.title.toLowerCase().includes(filterText.toLowerCase()))
+    }
+    if (filterColumn === 'description') {
+      return items.filter(item => item.description.toLowerCase().includes(filterText.toLowerCase()))
+    }
+    if (filterColumn === 'dueDate') {
+      return items.filter(item => item.dueDate.toLowerCase().includes(filterText.toLowerCase()))
+    }
+    if (filterColumn === 'status') {
+      return items.filter(item => item.status.toLowerCase().includes(filterText.toLowerCase()))
+    }
+    return items;
   }
 
   // Apply sorting and filtering
-  const processedData = filterData([...tasks].sort((a, b) => {
-    if (a[sortColumn] < b[sortColumn]) return sortDirection === 'asc' ? -1 : 1
-    if (a[sortColumn] > b[sortColumn]) return sortDirection === 'asc' ? 1 : -1
-    return 0
+  const processedData: Task[] = filterData([...tasks].sort((a, b) => {
+
+    if (sortColumn === 'dueDate') {
+      if (sortDirection === 'asc') {
+        return new Date(a[sortColumn]).getTime() - new Date(b[sortColumn]).getTime()
+      } else {
+        return new Date(b[sortColumn]).getTime() - new Date(a[sortColumn]).getTime()
+      }
+    }
+    else {
+      if (a[sortColumn] < b[sortColumn]) return sortDirection === 'asc' ? -1 : 1
+      if (a[sortColumn] > b[sortColumn]) return sortDirection === 'asc' ? 1 : -1
+      return 0
+    }
   }))
 
   // Pagination
@@ -171,7 +186,7 @@ const Task: FC = () => {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target
     setFormData(prevData => ({
       ...prevData,
@@ -186,6 +201,20 @@ const Task: FC = () => {
     setIsModalOpen(true)
     setIsCalendarDisabled(mode === 'view')
     setDate(task ? new Date(task.dueDate) : undefined)
+
+    if (mode === 'update') {
+      setFormData({
+        title: task?.title || '',
+        description: task?.description || '',
+        dueDate: task?.dueDate || '',
+        status: task?.status || ''
+      })
+    }
+  }
+
+  const handleFilterColumnChange = (e: string) => {
+    setFilterText('')
+    setFilterColumn(e)
   }
 
   const closeModal = () => {
@@ -198,12 +227,29 @@ const Task: FC = () => {
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Task Maintenance</h1>
         <div className="flex justify-between items-center">
-          <Input
-            placeholder="Search..."
-            value={filterText}
-            onChange={(e) => setFilterText(e.target.value)}
-            className="max-w-sm mb-4"
-          />
+          <div className="flex justify-between items-center">
+            <div className="max-w-sm mb-4 mr-2">
+              <Select
+                onValueChange={handleFilterColumnChange} 
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a column filter" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="title">Title</SelectItem>
+                  <SelectItem value="description">Description</SelectItem>
+                  <SelectItem value="dueDate">dueDate</SelectItem>
+                  <SelectItem value="status">Status</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Input
+              placeholder="Search..."
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              className="max-w-sm mb-4"
+            />
+          </div>
           <Button onClick={() => openModal('insert')} className="mb-4">Add New Task</Button>
         </div>
         <Table>
@@ -237,7 +283,7 @@ const Task: FC = () => {
             ))}
           </TableBody>
         </Table>
-        
+
         <Pagination className="mt-4">
           <PaginationContent>
             <PaginationItem>
@@ -255,7 +301,7 @@ const Task: FC = () => {
             </PaginationItem>
           </PaginationContent>
         </Pagination>
-          
+
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen} >
           <DialogContent>
             <DialogHeader>
